@@ -1,6 +1,6 @@
 {
   "name": "@aicacia/option",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "aicacia option",
   "repository": {
     "type": "git",
@@ -37,15 +37,15 @@
   "license": "(MIT OR Apache-2.0)",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "21",
+    "@rollup/plugin-commonjs": "22",
     "@rollup/plugin-node-resolve": "13",
     "@rollup/plugin-typescript": "8",
     "@types/tape": "4",
-    "@typescript-eslint/eslint-plugin": "4",
-    "@typescript-eslint/parser": "4",
-    "eslint": "7",
+    "@typescript-eslint/eslint-plugin": "5",
+    "@typescript-eslint/parser": "5",
+    "eslint": "8",
     "eslint-config-prettier": "8",
-    "eslint-plugin-prettier": "3",
+    "eslint-plugin-prettier": "4",
     "husky": "4",
     "nyc": "15",
     "prettier": "2",

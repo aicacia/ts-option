@@ -179,6 +179,10 @@ export class Option<T> {
     return this;
   }
 
+  clear(): Option<T> {
+    this._value = NULL_SECRET as any;
+    return this;
+  }
   take(): Option<T> {
     if (this.isSome()) {
       const value = this._value;
@@ -198,10 +202,6 @@ export class Option<T> {
   }
   replace(value: T): Option<T> {
     this._value = value;
-    return this;
-  }
-  clear(): Option<T> {
-    this._value = NULL_SECRET as any;
     return this;
   }
 
