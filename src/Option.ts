@@ -24,9 +24,9 @@ export class Option<T> implements Iterable<T> {
     return Option.from(json);
   }
 
-  private _value: T;
+  private _value: T | INULL_SECRET;
 
-  constructor(createSecret: ICREATE_SECRET | INULL_SECRET, value: T) {
+  constructor(createSecret: ICREATE_SECRET, value: T | INULL_SECRET) {
     if (createSecret !== CREATE_SECRET) {
       throw new TypeError(
         "Options can only be created with the some or none functions"
@@ -45,7 +45,7 @@ export class Option<T> implements Iterable<T> {
 
   expect(msg: (() => string) | string): T {
     if (this.isSome()) {
-      return this._value;
+      return this._value as T;
     } else {
       throw new Error(typeof msg === "function" ? msg() : msg);
     }
@@ -56,14 +56,14 @@ export class Option<T> implements Iterable<T> {
   }
   unwrapOr(def: T): T {
     if (this.isSome()) {
-      return this._value;
+      return this._value as T;
     } else {
       return def;
     }
   }
   unwrapOrElse(defFn: () => T): T {
     if (this.isSome()) {
-      return this._value;
+      return this._value as T;
     } else {
       return defFn();
     }
@@ -71,21 +71,21 @@ export class Option<T> implements Iterable<T> {
 
   map<U>(fn: (value: T) => U): Option<U> {
     if (this.isSome()) {
-      return some(fn(this._value));
+      return some(fn(this._value as T));
     } else {
       return none();
     }
   }
   mapOr<U>(fn: (value: T) => U, def: U): Option<U> {
     if (this.isSome()) {
-      return some(fn(this._value));
+      return some(fn(this._value as T));
     } else {
       return some(def);
     }
   }
   mapOrElse<U>(fn: (value: T) => U, defFn: () => U): Option<U> {
     if (this.isSome()) {
-      return some(fn(this._value));
+      return some(fn(this._value as T));
     } else {
       return some(defFn());
     }
@@ -93,14 +93,14 @@ export class Option<T> implements Iterable<T> {
 
   flatMap<U>(fn: (value: T) => Option<U>): Option<U> {
     if (this.isSome()) {
-      return fn(this._value);
+      return fn(this._value as T);
     } else {
       return none();
     }
   }
   flatMapOr<U>(fn: (value: T) => Option<U>, def: Option<U>): Option<U> {
     if (this.isSome()) {
-      return fn(this._value);
+      return fn(this._value as T);
     } else {
       return def;
     }
@@ -110,7 +110,7 @@ export class Option<T> implements Iterable<T> {
     defFn: () => Option<U>
   ): Option<U> {
     if (this.isSome()) {
-      return fn(this._value);
+      return fn(this._value as T);
     } else {
       return defFn();
     }
@@ -125,7 +125,7 @@ export class Option<T> implements Iterable<T> {
   }
   andThen<U>(fn: (value: T) => Option<U>): Option<U> {
     if (this.isSome()) {
-      return fn(this._value);
+      return fn(this._value as T);
     } else {
       return none();
     }
@@ -190,7 +190,7 @@ export class Option<T> implements Iterable<T> {
     if (this.isSome()) {
       const value = this._value;
       this._value = NULL_SECRET as any;
-      return some(value);
+      return some(value as T);
     } else {
       return none();
     }
@@ -210,7 +210,7 @@ export class Option<T> implements Iterable<T> {
 
   ifSome(fn: (value: T) => void, elseFn?: () => void): Option<T> {
     if (this.isSome()) {
-      fn(this._value);
+      fn(this._value as T);
     } else if (elseFn) {
       elseFn();
     }
@@ -220,7 +220,7 @@ export class Option<T> implements Iterable<T> {
     if (this.isNone()) {
       fn();
     } else if (elseFn) {
-      elseFn(this._value);
+      elseFn(this._value as T);
     }
     return this;
   }
@@ -257,5 +257,4 @@ export class OptionIterator<T> implements Iterator<T> {
 
 export const some = <T>(value: T): Option<T> =>
   new Option(CREATE_SECRET, value);
-export const none = <T>(): Option<T> =>
-  new Option(CREATE_SECRET, NULL_SECRET as T);
+export const none = <T>(): Option<T> => new Option(CREATE_SECRET, NULL_SECRET);
