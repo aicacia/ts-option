@@ -170,5 +170,14 @@ tape("Option", (assert: tape.Test) => {
     /Options can only be created with the some or none functions/
   );
 
+  for (const value of some("test")) {
+    assert.equal(value, "test", "should loop over some option");
+  }
+  let loopedOverNone = false;
+  for (const _ of none()) {
+    loopedOverNone = true;
+  }
+  assert.equal(loopedOverNone, false, "should not loop over none option");
+
   assert.end();
 });

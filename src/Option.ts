@@ -1,7 +1,10 @@
-const CREATE_SECRET = {},
-  NULL_SECRET = {};
+type ICREATE_SECRET = unknown;
+type INULL_SECRET = unknown;
 
-export class Option<T> {
+const CREATE_SECRET: ICREATE_SECRET = {},
+  NULL_SECRET: INULL_SECRET = {};
+
+export class Option<T> implements Iterable<T> {
   static some<T>(value: T): Option<T> {
     return some(value);
   }
@@ -23,7 +26,7 @@ export class Option<T> {
 
   private _value: T;
 
-  constructor(createSecret: unknown, value: T) {
+  constructor(createSecret: ICREATE_SECRET | INULL_SECRET, value: T) {
     if (createSecret !== CREATE_SECRET) {
       throw new TypeError(
         "Options can only be created with the some or none functions"
@@ -227,6 +230,28 @@ export class Option<T> {
   }
   toJS(): T | null {
     return this.unwrapOr(null as any);
+  }
+
+  [Symbol.iterator](): OptionIterator<T> {
+    return new OptionIterator(this._value);
+  }
+}
+
+export class OptionIterator<T> implements Iterator<T> {
+  private value: T | INULL_SECRET;
+
+  constructor(value: T | INULL_SECRET) {
+    this.value = value;
+  }
+
+  next(): IteratorResult<T, undefined> {
+    if (this.value === NULL_SECRET) {
+      return { done: true, value: undefined };
+    } else {
+      const value = this.value as T;
+      this.value = NULL_SECRET;
+      return { done: false, value };
+    }
   }
 }
 
