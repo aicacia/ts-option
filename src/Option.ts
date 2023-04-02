@@ -237,7 +237,7 @@ export class Option<T> implements Iterable<T> {
   }
 }
 
-export class OptionIterator<T> implements Iterator<T> {
+class OptionIterator<T> implements Iterator<T> {
   private value: T | INULL_SECRET;
 
   constructor(value: T | INULL_SECRET) {
